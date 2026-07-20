@@ -1,9 +1,10 @@
 # 📔 JournalApp
 
-A backend REST API for a personal journaling application, built with **Spring Boot**. Users can create, manage, and track their journal entries securely through a clean set of RESTful endpoints.
+A backend REST API for a personal journaling application, built with **Spring Boot**. Users can register, authenticate, and manage their journal entries securely through a clean set of RESTful endpoints, protected with **JWT-based authentication**.
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
@@ -11,9 +12,10 @@ A backend REST API for a personal journaling application, built with **Spring Bo
 
 ## 🚀 Features
 
-- User registration and authentication
+- User registration and JWT-based authentication
 - Create, read, update, and delete (CRUD) journal entries
 - Entries linked to individual users
+- Secured endpoints using Spring Security + JWT
 - RESTful API design following standard HTTP conventions
 - SonarQube integration for code quality checks
 - CI pipeline configured via GitHub Actions
@@ -24,6 +26,7 @@ A backend REST API for a personal journaling application, built with **Spring Bo
 |---|---|
 | Language | Java |
 | Framework | Spring Boot |
+| Security | Spring Security + JWT |
 | Database | MongoDB |
 | Build Tool | Maven |
 | Code Quality | SonarQube |
@@ -73,18 +76,29 @@ journalApp/
 
 The application will start on `http://localhost:8080` by default.
 
+## 🔐 Authentication
+
+All endpoints under `/journal` are secured and require a valid **JWT token** in the request header:
+
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+A token is obtained after successfully registering and logging in through the public auth endpoints.
+
 ## 📡 API Endpoints
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/public/create-user` | Register a new user |
-| POST | `/journal` | Create a new journal entry |
-| GET | `/journal` | Get all journal entries for the logged-in user |
-| GET | `/journal/id/{id}` | Get a specific journal entry |
-| PUT | `/journal/id/{id}` | Update a journal entry |
-| DELETE | `/journal/id/{id}` | Delete a journal entry |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| POST | `/public/create-user` | Register a new user | ❌ |
+| POST | `/public/login` | Login and receive a JWT token | ❌ |
+| GET | `/journal` | Get all journal entry IDs for the logged-in user | ✅ |
+| POST | `/journal` | Create a new journal entry | ✅ |
+| GET | `/journal/id/{myId}` | Get a specific journal entry by ID | ✅ |
+| PUT | `/journal/id/{myId}` | Update a journal entry by ID | ✅ |
+| DELETE | `/journal/id/{myId}` | Delete a journal entry by ID | ✅ |
 
-> Update this table with your actual endpoints and request/response formats.
+> ⚠️ The `/public/login` path is a placeholder based on a typical Spring Security + JWT setup — update this row with your actual login endpoint path if it differs.
 
 ## 🧪 Running Tests
 
@@ -94,7 +108,8 @@ The application will start on `http://localhost:8080` by default.
 
 ## 📌 Roadmap
 
-- [ ] Add JWT-based authentication
+- [ ] Return full journal entry objects (not just IDs) in `GET /journal`
+- [ ] Add refresh token support
 - [ ] Deploy to a cloud platform (Render / Railway)
 - [ ] Add pagination and search for journal entries
 - [ ] Write unit and integration tests
