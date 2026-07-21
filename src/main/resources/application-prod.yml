@@ -1,12 +1,29 @@
-spring   :
+spring:
   application:
-    name: Journal App            # ✅ Under application
+    name: Journal App
   data:
     mongodb:
-      uri: mongodb+srv://knowyournation2004_db_user:zCsQlBboKjy5VnPA@cluster0.xmug2rn.mongodb.net/
+      uri: ${MONGO_URI}
+      database: journaldb
+      auto-index-creation: true
+    redis:
+      host: localhost
+      port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
-      database: journaldb        # ✅ Under mongodb
-      auto-index-creation: true  # ✅ Under mongodb
+weather:
+  api:
+    key: ${WEATHER_API_KEY}
 
 server:
   port: 8081

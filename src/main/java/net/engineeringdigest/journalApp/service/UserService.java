@@ -1,7 +1,7 @@
 package net.engineeringdigest.journalApp.service;
 
-import com.mongodb.DuplicateKeyException;
 import lombok.extern.slf4j.Slf4j;
+import net.engineeringdigest.journalApp.controller.JournalEntryController;
 import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.UserRepository;
 import org.bson.types.ObjectId;
@@ -11,20 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 @Slf4j
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
+
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
 
     public boolean saveNewUser(User user) {
         try {
@@ -32,23 +31,25 @@ public class UserService {
             user.setRoles(Arrays.asList("USER"));
             userRepository.save(user);
             return true;
-        } catch (DuplicateKeyException e) {
-            log.error("User already exists: {}", e.getMessage());
-            return false;   // ✅ handled gracefully
         } catch (Exception e) {
-            log.error("Error occurred while saving user: {}", e.getMessage());
-            return false;   // ✅ handles any other unexpected error
+            log.error("hahahhahhahahahah");
+            log.warn("hahahhahhahahahah");
+            log.info("hahahhahhahahahah");
+            log.debug("hahahhahhahahahah");
+            log.trace("hahahhahhahahahah");
+            return false;
         }
     }
 
     public void saveAdmin(User user) {
-
-        user.setUserName(user.getUserName().trim().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        user.setRoles(Arrays.asList("USER", "ADMIN"));
         userRepository.save(user);
     }
 
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
 
     public List<User> getAll() {
         return userRepository.findAll();
@@ -58,23 +59,11 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User findByUserName(String userName) {
-        return userRepository.findByUserName(userName);
-    }
-
     public void deleteById(ObjectId id) {
         userRepository.deleteById(id);
     }
 
-    public void deleteEntry(User userInDb) {
-
-    }
-
-    public void saveExistingUser(User user) {
-        userRepository.save(user);
-    }
-
-    public void saveUser(User user) {
-
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 }
